@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entry</title>
+
+    <link rel="stylesheet" href="/resources/style.css">
+</head>
+<body>
+    <div id="wrap">
+        <div>
+            <table>
+                <thead>
+                    <th>화면명</th>
+                    <th>URL</th>
+                    <th>완료여부</th>
+                    <th>비고</th>
+                </thead>
+                <tbody id="pagesTableBody">
+                    <tr>
+                      
+                    </tr>
+                </tbody>
+            </table>
+            <button id="test">테스트</button>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $(function(){
+            let pagesData = [];
+
+            $.getJSON('../pageData.json', function(data){
+                const tbody = $('#pagesTableBody');
+
+                tbody.empty();
+
+                data.forEach((page, index) => {
+                    const pageCount = page.length;
+                    const basePath = './';
+                    const tr = $('<tr></tr>');
+
+
+                    // 화면명
+                    const pageCell = $('<td data-col="title">' + page.title + '</td>');
+                    tr.append(pageCell);
+
+                    // URL 
+                    const urlCell = $('<td><a href="' + basePath + page.url + '">"'+ page.url +'"</a></td>')
+                    tr.append(urlCell);
+
+                    const isChecked = data[index].status == true ? 'checked' : ''; 
+                    const statusCell = $(`<td><input type="checkbox" ${isChecked}/></td>`);
+
+                    tr.append(statusCell);                    
+                    
+                    const noteCell = $('<td></td>').html('<textarea placeholder="비고입력란"/>');
+
+                    tr.append(noteCell);
+                    
+                    tbody.append(tr);
+                })
+            }).fail(function(){
+                console.error('JSON 파일을 불러올 수 없습니다.');
+                $('#pagesTableBody').html('<tr><td colspan="4">데이터를 불러올 수 없습니다.</td></tr>');
+            })
+
+            $('#test').on('click', function(){
+                var dataToSend = {
+                    title: '새로운 포스트 제목',
+                    content: '이것은 jQuery로 보낸 내용입니다.',
+                    author: '사용자1'
+                };
+
+                $.ajax({
+                    url: 'http://localhost:3000/update-status',
+                    type: 'POST',
+                    data: JSON.stringify(dataToSend),
+                    success: function(response){
+                        console.log("성공", response);
+                    },
+                    error: function(error) {
+                        console.error("오류", error)
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+</html>

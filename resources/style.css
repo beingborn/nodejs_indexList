@@ -1,0 +1,13 @@
+#wrap {
+    margin: 0 auto;
+}
+
+th, td {
+    border: 1px solid #ddd;
+
+}
+
+th {
+    background-color: #eee;
+}
+
