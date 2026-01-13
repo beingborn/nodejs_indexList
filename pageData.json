@@ -1,12 +1,1 @@
-[
-    {
-        "title" : "로그인",
-        "url" : "login.html",
-        "status" : true
-    },
-    {
-        "title" : "메인",
-        "url" : "main.html",
-        "status" : false
-    }
-]
+[{"id":1,"title":"유저온리","url":"login.html","status":true},{"id":2,"title":"메인","url":"main.html","status":false}]
