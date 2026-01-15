@@ -29,8 +29,6 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
         $(function(){
-            let pagesData = [];
-
             $.getJSON('../pageData.json', function(data){
                 const tbody = $('#pagesTableBody');
 
@@ -100,18 +98,17 @@
 
             var isChecked = $(this).prop('checked');
 
+            console.log("체크상태", isChecked);
+
             var dataToSend = {
-                id : targetId,
+                id : Number(targetId),
                 status: isChecked
             }
-
-            console.log(targetId)
-            console.log(dataToSend)
             
             $.ajax({
                 url: 'http://localhost:3000/update-status',
                 type: 'POST',
-                data: JSON.stringify(dataToSend),
+                data: dataToSend,
                 success: function(response){
                     console.log("성공", response);
                 },

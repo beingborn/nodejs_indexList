@@ -26,24 +26,25 @@ app.listen(port, () => {
 // 완료 여부 체크
 app.post("/update-status", function(req, res) {
     var data = req.body;
-    var targetPage = file.find((page) => page.id == data.id);
+    var {id, status} = data;
+    var parseStatus = Boolean(status); 
+    
+    var targetPage = file.find((page) => page.id == id);
 
-    console.log(targetPage)
+    console.log("타겟 페이지!" ,targetPage, "입니다");
 
     if (targetPage) {
-        targetPage.status = data.status;
+        targetPage.status = parseStatus;
 
         fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
         if (err) {
             console.log(err);
             return res.status(500).send("파일 저장 중 오류 발생");
         }
-            console.log('Updated ID:', data.id, 'to Status:', data.status);
+            console.log('Updated ID:', id, 'to Status:', parseStatus);
             return res.send("상태가 변경되었습니다.");
         });
     } else {
         return res.status(404).send("해당 페이지를 찾을 수 없습니다.");
     }
-    
-    return res.send("제목 변경");
 })
