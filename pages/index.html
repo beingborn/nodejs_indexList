@@ -6,70 +6,119 @@
     <title>Entry</title>
 
     <link rel="stylesheet" href="/resources/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+
+    <style>
+        textarea {
+            resize: none;
+        }
+    </style>
 </head>
 <body>
     <div id="wrap">
-        <div>
-            <table>
-                <thead>
-                    <th>화면명</th>
-                    <th>URL</th>
-                    <th>완료여부</th>
-                    <th>비고</th>
-                </thead>
-                <tbody id="pagesTableBody">
-                    <tr>
-                      
-                    </tr>
-                </tbody>
-            </table>
-            <button id="test">테스트</button>
+        <nav class="navbar bg-body-tertiary mb-4">
+            <div class="container-lg">
+                <a class="d-flex align-items-center gap-2 navbar-brand" href="#">
+                    <img src="https://placehold.co/600x400" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                    Company Logo
+                </a>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                    <button class="btn btn-outline-primary" type="submit">Search</button>
+                </form>
+            </div>
+        </nav>
+        <div class="container-fluid">         
+            <div class="container-lg">           
+                <ul class="d-flex align-items-center gap-3 list-unstyled">
+                    <li>
+                        <strong>총 페이지</strong>
+                        <span>33</span>
+                    </li>
+                    <li>
+                        <strong>완료 페이지</strong>
+                        <span>26</span>
+                    </li>
+                    <li>
+                        <strong>잔여 페이지</strong>
+                        <span>7</span>
+                    </li>
+                </ul>
+
+                <table class="table w-100">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col style="width: 80px">
+                        <col style="width: 400px">
+                    </colgroup>
+                    <thead class="table-primary">
+                        <th>화면명</th>
+                        <th>URL</th>
+                        <th>완료여부</th>
+                        <th>비고</th>
+                    </thead>
+                    <tbody id="pagesTableBody">
+                        <tr>
+                        
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" id="test">테스트</button>
+            </div>
+            
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
         $(function(){
-            $.getJSON('../pageData.json', function(data){
-                const tbody = $('#pagesTableBody');
 
-                tbody.empty();
+            function getPagesData(){
+                $.getJSON('../pageData.json', function(data){
+                    const tbody = $('#pagesTableBody');
 
-                data.forEach((page, index) => {
-                    const pageCount = page.length;
-                    const basePath = './';
-                    const tr = $('<tr></tr>');
+                    tbody.empty();
 
-                    // 화면명
-                    const pageCell = $('<td data-col="title">' + page.title + '</td>');
-                    tr.append(pageCell);
+                    data.forEach((page, index) => {
+                        const pageCount = page.length;
+                        const basePath = './';
+                        const tr = $('<tr></tr>');
 
-                    // URL 
-                    const urlCell = $('<td><a href="' + basePath + page.url + '">"'+ page.url +'"</a></td>')
-                    tr.append(urlCell);
+                        // 화면명
+                        const pageCell = $('<td data-col="title">' + page.title + '</td>');
+                        tr.append(pageCell);
 
-                    const isChecked = page.status == true ? 'checked' : ''; 
-                    const statusCell = $(`<td class="status"><input data-id="${page.id}" type="checkbox" ${isChecked}/></td>`);
+                        // URL 
+                        const urlCell = $('<td><a href="' + basePath + page.url + '">"'+ page.url +'"</a></td>')
+                        tr.append(urlCell);
 
-                    tr.append(statusCell);                    
+                        const isChecked = page.status == 'true' ? 'checked' : ''; 
+                        const statusCell = $(`<td class="status text-center"><input data-id="${page.id}" type="checkbox" ${isChecked}/></td>`);
 
-                    const noteHtml = `
-                        <div style="display: flex; flex-dirrection: column; gap: 4px;">
-                            <textarea id=${page.id + '-textarea'} placeholder="비고입력란">
-                                ${page.body || "비고를 입력하세요"}
-                            </textarea>
-                            <button>저장하기</button>
-                        </div>
-                    `
-                    const noteCell = $('<td></td>').html(noteHtml);
+                        tr.append(statusCell);                    
 
-                    tr.append(noteCell);
-                    
-                    tbody.append(tr);
+                        const noteHtml = `
+                            <div style="display: flex; flex-dirrection: column; gap: 4px;">
+                                <textarea class="form-control" id=${page.id + '-textarea'} placeholder="비고입력란">
+                                    ${page.body || ""}
+                                </textarea>
+                                <button class="btn btn-secondary flex-shrink-0">저장하기</button>
+                            </div>
+                        `
+                        const noteCell = $('<td></td>').html(noteHtml);
+
+                        tr.append(noteCell);
+                        
+                        tbody.append(tr);
+                    })
+                }).fail(function(){
+                    console.error('JSON 파일을 불러올 수 없습니다.');
+                    $('#pagesTableBody').html('<tr><td colspan="4">데이터를 불러올 수 없습니다.</td></tr>');
                 })
-            }).fail(function(){
-                console.error('JSON 파일을 불러올 수 없습니다.');
-                $('#pagesTableBody').html('<tr><td colspan="4">데이터를 불러올 수 없습니다.</td></tr>');
-            })
+            }
+
+            getPagesData();
 
             // test
             $('#test').on('click', function(){
@@ -85,6 +134,8 @@
                     data: JSON.stringify(dataToSend),
                     success: function(response){
                         console.log("성공", response);
+
+                        getPagesData();
                     },
                     error: function(error) {
                         console.error("오류", error)
@@ -117,7 +168,6 @@
                 }
             })
         });
-
     </script>
 </body>
 </html>

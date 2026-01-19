@@ -16,6 +16,6 @@
         "express": "^5.2.1"
     },
     "nodemonConfig": {
-        "ignore": ["/server.js"]
+        "ignore": ["/server.js, *.json"]
     }
 }
