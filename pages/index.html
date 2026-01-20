@@ -100,10 +100,10 @@
 
                         const noteHtml = `
                             <div style="display: flex; flex-dirrection: column; gap: 4px;">
-                                <textarea class="form-control" id=${page.id + '-textarea'} placeholder="비고입력란">
+                                <textarea disabled class="form-control" id=${page.id + '-textarea'} placeholder="비고입력란">
                                     ${page.body || ""}
                                 </textarea>
-                                <button class="btn btn-secondary flex-shrink-0">저장하기</button>
+                                <button disabled class="btn btn-secondary flex-shrink-0">저장하기</button>
                             </div>
                         `
                         const noteCell = $('<td></td>').html(noteHtml);
