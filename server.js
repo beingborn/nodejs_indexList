@@ -23,7 +23,20 @@ app.listen(port, () => {
     console.log(`서버가 ${port}에서 실행중입니다.`)
 })
 
-// Update Info
+app.post("/create-info", function(req,res) {
+    var data = req.body;
+
+    file.push(data);
+
+    fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
+    if (err) {
+        console.log(err);
+        return res.status(500).send("파일 저장 중 오류 발생");
+    }
+        return res.send("상태가 변경되었습니다.");
+    });
+})
+
 app.post("/update-info", function(req, res) {
     var data = req.body;
     var {id, title, url, body, status} = data;
@@ -47,3 +60,22 @@ app.post("/update-info", function(req, res) {
     }
 })
 
+app.post("/delete-info", function(req, res) {
+    var data = req.body;
+    var {id} = data;
+
+    // 원본 배열 직접 삭제
+    for (let i = 0; i < file.length; i++) {
+        if (file[i].id === id) {
+            file.splice(i, 1);
+        }
+    }
+
+    fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
+    if (err) {
+        console.log(err);
+        return res.status(500).send("파일 저장 중 오류 발생");
+    }
+        return res.send("상태가 변경되었습니다.");
+    });
+})

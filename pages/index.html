@@ -144,28 +144,26 @@
                 <a class="d-flex align-items-center gap-2 navbar-brand" href="#">
                     <img src="../assets/logo/index_logo.svg" width="170" alt="Logo" class="d-inline-block align-text-top">
                 </a>
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="페이지명 검색" aria-label="Search"/>
-                    <button class="btn btn-primary" type="submit">
+                <div class="d-flex">
+                    <input id="searchTerm" class="form-control me-2" type="search" placeholder="페이지명 검색" aria-label="Search"/>
+                    <button id="searchConfirm" class="btn btn-primary" type="button">
                         <img src="../assets/ico/search-line-white.svg" alt="">
                     </button>
-                </form>
+                </div>
             </div>
         </nav>
         <div class="container-fluid">         
             <div class="container-lg">
                 <div class="table-responsive">
-                    <table class="table w-100 table-bordered">
+                    <table class="table w-100 table-bordered" id="pagesTable">
                         <colgroup>
-                            <col style="width: 40px;">
                             <col style="width: 300px;">
                             <col style="width: 300px;">
                             <col style="width: 80px">
                             <col style="width: 400px">
                             <col style="width: 80px;">
                         </colgroup>
-                        <thead>
-                            <th class="text-center">ID</th>
+                        <thead class="table-light">
                             <th>화면명</th>
                             <th>URL</th>
                             <th class="text-center">완료</th>
@@ -179,8 +177,17 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="d-flex mb-2">
-                    <button type="button" class="btn btn-dark">신규 페이지 생성</button>
+                <div class="d-flex mb-2 justify-content-between">
+                    <button type="button" class="btn btn-dark" id="createNewPage">신규 페이지 생성</button>
+                    <div id="searchResultWrap">
+                        <div class="d-flex mb-2">
+                            <div class="d-flex gap-2 align-items-center bg-white">
+                                <span>검색 결과</span>
+                                <strong id="searchResult"></strong>
+                                <button id="searchReset" class="btn btn-secondary">초기화</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -238,55 +245,80 @@
                 $('#progress').attr('aria-valuenow', donePercent);
                 $('#progress').text(donePercent + '%');
             }
+            
+            const colLength = $('#pagesTable').find('col').length;
+
+            function returnNoDataTr(status) {
+                const display = status ? 'table-row' : 'none';
+
+                return `
+                    <tr class="no-data-tr" style="display: ${display};">
+                        <td class="text-center text-muted" colspan="${colLength}">
+                            조회된 데이터가 없습니다.
+                        </td>
+                    </tr>
+                `
+            }
+
+            function hideNoDataTr(){
+                $('.no-data-tr').css('display', 'none');
+            }
+
+            function showNoDataTr(){
+                $('.no-data-tr').css('display', 'table-row');
+            }
+
+            let searchList = null;
 
             function getPagesData() {
                 $.getJSON('../pageData.json', function(data) {
                     const tbody = $('#pagesTableBody');
                     tbody.empty();
 
+                    if (data.length === 0) {
+                        tbody.append(returnNoDataTr(true));
+                    }
+
                     data.forEach((page, index) => {
                         const basePath = './';
-                        const tr = $('<tr data-id="' + page.id + '"></tr>'); // 행 단위 ID 관리
-
-                        // 1. ID (수정 불가)
-                        tr.append(`<td class="text-center">${page.id}</td>`);
-
-                        // 2. 화면명 (Input 토글)
+                        const tr = $('<tr class="data" data-id="' + page.id + '"></tr>'); // 행 단위 ID 관리
+                        
+                        // 화면명 (Input 토글)
                         tr.append(`
                             <td data-col="title">
                                 <span class="view-mode">${page.title}</span>
-                                <input type="text" class="form-control edit-mode" style="display:none;" value="${page.title}">
+                                <input type="text" placeholder="화면명" class="form-control edit-mode" style="display:none;" value="${page.title}">
                             </td>
                         `);
 
-                        // 3. URL (Input 토글)
+                        // URL (Input 토글)
                         tr.append(`
                             <td data-col="url">
                                 <a href="${basePath}${page.url}" class="view-mode">${page.url}</a>
-                                <input type="text" class="form-control edit-mode" style="display:none;" value="${page.url}">
+                                <input type="text" placeholder="URL" class="form-control edit-mode" style="display:none;" value="${page.url}">
                             </td>
                         `);
 
-                        // 4. 상태 (Checkbox 활성화 토글)
+                        // 상태 (Checkbox 활성화 토글)
                         const isChecked = page.status == 'true' ? 'checked' : '';
                         tr.append(`
-                            <td class="text-center" data-col="status">
+                            <td data-col="status" class="text-center">
                                 <input class="form-check-input status-chk" type="checkbox" ${isChecked} disabled>
                                 <span class="status-check" style="display: none">${isChecked}</span>
                             </td>
                         `);
 
-                        // 5. 비고 (Textarea 토글)
+                        // 비고 (Textarea 토글)
                         const pageBodyStr = page.body.split('\n').join("<br/>")
 
                         tr.append(`
                             <td data-col="body">
                                 <p class="text-muted view-mode" style="margin-bottom:0;">${pageBodyStr || ""}</p>
-                                <textarea id="${'textarea-' + page.id}" class="form-control edit-mode" style="display:none;">${page.body || ""}</textarea>
+                                <textarea placeholder="비고" id="${'textarea-' + page.id}" class="form-control edit-mode" style="display:none;">${page.body || ""}</textarea>
                             </td>
                         `);
 
-                        // 6. 액션 버튼 (Font Awesome 아이콘 활용)
+                        // 액션 
                         const actionHtml = `
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
@@ -299,10 +331,17 @@
                         `;
                         tr.append(actionHtml);
 
-                        tbody.append(tr);
+                        tbody.append(tr);                        
 
                         countPagesData(data);
                     });
+
+                    tbody.append(returnNoDataTr(false));
+
+                    searchList = tbody.find('tr:not(.no-data-tr)');
+                    $('#searchResultWrap').hide();
+
+                    console.log(searchList)
                 }).fail(function() {
                     console.error('JSON 파일을 불러올 수 없습니다.');
                     $('#pagesTableBody').html('<tr><td colspan="6" class="text-center">데이터를 불러올 수 없습니다.</td></tr>');
@@ -312,6 +351,7 @@
             getPagesData();
             checkServerConnection();
 
+            // 서버 상태 확인
             let serverConnect = true;
             
             function checkServerConnection() {
@@ -332,9 +372,159 @@
                     }
                 })
             }
+
+            // 신규 생성 폼 이벤트 핸들러 
+            $('#createNewPage').on('click', function(){
+                handleCreateNewPage();
+            })
+
+            function dateFormat(date) {
+                let month = date.getMonth() + 1;
+                let day = date.getDate();
+                let hour = date.getHours();
+                let minute = date.getMinutes();
+                let second = date.getSeconds();
+        
+                month = month >= 10 ? month : '0' + month;
+                day = day >= 10 ? day : '0' + day;
+                hour = hour >= 10 ? hour : '0' + hour;
+                minute = minute >= 10 ? minute : '0' + minute;
+                second = second >= 10 ? second : '0' + second;
+        
+                return date.getFullYear() + '-' + month + '-' + day + hour + minute + second;
+            }
+
+            // 신규 생성 폼 생성
+            function handleCreateNewPage(){ 
+                if (!serverConnect) {
+                    alert("서버가 연결되어 있지 않습니다.");
+
+                    return;
+                }
+
+                const createTime = dateFormat(new Date());
+
+                const editTr = `
+                    <tr class="new" data-id="${createTime}">
+                        <td data-col="title">
+                            <input placeholder="화면명" type="text" class="form-control edit-mode">
+                        </td>            
+                        <td data-col="url">
+                            <input placeholder="URL" type="text" class="form-control edit-mode">
+                        </td>            
+                        <td data-col="status" class="text-center">
+                            <input class="form-check-input status-chk" type="checkbox">
+                        </td>            
+                        <td data-col="body">
+                            <textarea placeholder="비고" class="form-control edit-mode"></textarea>
+                        </td>            
+                        <td class="text-center">
+                            <button class="save"></button>
+                            <button class="cancel"></button>
+                        </td>
+                    </tr>
+                `;
             
+                $('#pagesTableBody').append(editTr);
+                $('.new td[data-col="title"] input').focus();
+            }
+
+            // 검색
+            $('#searchConfirm').on('click', function(){
+                const searchTerm = $('#searchTerm').val().trim().toLowerCase();
+                let searchResultLength = 0;
+
+                searchList.each(function(idx, el) {
+                    const title = $(this).find('td[data-col="title"] .view-mode').text().trim().toLocaleLowerCase();
+
+                    if (title.includes(searchTerm)) {
+                        $(this).css('display', 'table-row');
+                        searchResultLength++;
+                    } else {
+                        $(this).hide();
+                    }
+
+                    if (searchResultLength == 0) {
+                        showNoDataTr();
+                    } else {
+                        hideNoDataTr();
+                    }
+
+                    $('#searchResultWrap').show();
+                    $('#searchResult').text(searchResultLength + '개');
+                })
+            })
+
+            $('#searchReset').on('click', function(){
+                searchList.each(function(idx, el){
+                    $(this).css('display', 'table-row');
+                })
+
+                $('#searchTerm').val("");
+                $('#searchResultWrap').hide();
+                $('#searchResult').text("");
+
+                hideNoDataTr();
+            })
+
+            // 신규 생성 
+            $(document).on('click', '.new .save', function(){
+                if (!serverConnect) {
+                    alert("서버가 연결되어 있지 않습니다.");
+
+                    return;
+                }
+
+                const $tr = $(this).closest('tr');
+                const targetId = $tr.attr('data-id');
+                const isChecked = $tr.find('input[type="checkbox"]').prop('checked');
+                const title = $tr.find('td[data-col="title"] input').val();
+                const body = $tr.find('td[data-col="body"] textarea').val();
+                const url = $tr.find('td[data-col="url"] input').val();
+
+                if (title.trim() === "") {
+                    alert("화면명을 입력해주세요");
+
+                    $('.new td[data-col="title"] input').focus();
+                    return;
+                }
+
+                if (url.trim() === "" || !url.includes('.html')) {
+                    alert("URL 형식이 잘못되었거나 공백입니다 다시 입력해주세요");
+
+                    $('.new td[data-col="url"] input').focus();
+                    return;
+                }
+
+                var dataToSend = {
+                    id : targetId,
+                    title: title,
+                    url: url,
+                    body: body,
+                    status: isChecked
+                }
+
+                $.ajax({
+                    url: 'http://localhost:3000/create-info',
+                    type: 'POST',
+                    data: dataToSend,
+                    success: function(response){
+                        console.log("성공", response);
+                    },
+                    error: function(error) {
+                        console.error("오류", error)
+                    }
+                })
+            })
+
+            $(document).on('click', '.new .cancel', function(){
+                const $tr = $(this).closest('tr');
+
+                $tr.remove();
+            })
+
             // 수정
-            $(document).on('click', '.edit', function(){
+            $(document).on('click', '.data .edit', function(){
                 if (!serverConnect) {
                     alert("서버가 연결되어 있지 않습니다.");
 
@@ -354,9 +544,8 @@
                 $tr.find('textarea').keyup();
             })
 
-
             // 수정 취소
-            $(document).on('click', '.cancel', function(){
+            $(document).on('click', '.data .cancel', function(){
                 if (!serverConnect) {
                     alert("서버가 연결되어 있지 않습니다.");
 
@@ -401,7 +590,8 @@
                 $tr.find('input[type="checkbox"]').attr('disabled', true);
             })
             
-            $(document).on('click', '.save', function(){
+            // 저장
+            $(document).on('click', '.data .save', function(){
                 if (!serverConnect) {
                     alert("서버가 연결되어 있지 않습니다.");
 
@@ -415,8 +605,22 @@
                 const body = $tr.find('td[data-col="body"] textarea').val();
                 const url = $tr.find('td[data-col="url"] input').val();
 
+                if (title.trim() === "") {
+                    alert("화면명을 입력해주세요");
+
+                    $('.new td[data-col="title"] input').focus();
+                    return;
+                }
+
+                if (url.trim() === "" || !url.includes('.html')) {
+                    alert("URL 형식이 잘못되었거나 공백입니다 다시 입력해주세요");
+
+                    $('.new td[data-col="url"] input').focus();
+                    return;
+                }
+
                 var dataToSend = {
-                    id : Number(targetId),
+                    id : targetId,
                     title: title,
                     url: url,
                     body: body,
@@ -434,13 +638,34 @@
                         console.error("오류", error)
                     }
                 })
-            })        
-
+            })      
+            
             $(document).on('click', '.delete', function(){
                 if (!serverConnect) {
                     alert("서버가 연결되어 있지 않습니다.");
 
                     return;
+                }
+
+                const targetId = $(this).closest('tr').attr('data-id');
+                const confirm = window.confirm("정말 삭제하시겠습니까?");
+
+                if (confirm) {
+                    var dataToSend = {
+                        id: targetId
+                    }
+
+                    $.ajax({
+                        url: 'http://localhost:3000/delete-info',
+                        type: 'POST',
+                        data: dataToSend,
+                        success: function(response){
+                            console.log("성공", response);
+                        },
+                        error: function(error) {
+                            console.error("오류", error)
+                        }
+                    })
                 }
             })
 
