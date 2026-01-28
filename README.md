@@ -1,5 +1,6 @@
 # 로컬 퍼블리싱 현황관리 시스템
 
+<img src="/assets/readme_thumbnail.jpg" alt="로컬 퍼블리싱 현황관리 시스템 섬네일"/>
 로컬 환경에서 웹 퍼블리싱 작업의 진척 현황을 관리하고 프론트엔드 페이지를 한 곳에서 체계적으로 관리할 수 있는 Dashboard 시스템입니다.
 
 - 📋 **미리보기** : https://beingborn.github.io/nodejs_indexTable_test/pages/index.html
