@@ -3,7 +3,7 @@
 <img src="/assets/readme_thumbnail.jpg" alt="로컬 퍼블리싱 현황관리 시스템 섬네일"/>
 로컬 환경에서 웹 퍼블리싱 작업의 진행 현황을 효율적으로 관리하고, 프론트엔드 페이지를 한 곳에서 체계적으로 관리할 수 있는 대시보드 시스템입니다.
 기존 엑셀 기반의 URL 하드코딩 방식과 퍼블리셔별로 분산되어 있던 진행 현황 관리 방식을 개선하고, 관리 효율성을 높이기 위해 제작되었습니다.
-
+<br>
 <br>
 원본 코드 : https://github.com/beingborn/nodejs_indexList <br>
 미리보기 : https://beingborn.github.io/nodejs_indexList/pages/index.html
