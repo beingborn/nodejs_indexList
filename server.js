@@ -27,6 +27,8 @@ app.listen(port, () => {
 app.post("/create-info", function (req, res) {
     var data = req.body;
 
+    console.log(data);
+
     file.push(data);
 
     fs.writeFile(fileName, JSON.stringify(file, null, 2), function writeJSON(err) {
