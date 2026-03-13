@@ -263,7 +263,7 @@
         ></script>
         <script>
             $(function () {
-                const baseUrl = location.hostname === "localhost" ? "http://localhost:3000/" : null;
+                const baseUrl = "http://localhost:3000/";
 
                 function callAjaxPost(data, domain) {
                     $.ajax({
@@ -435,7 +435,7 @@
 
                 getPagesData();
 
-                if (baseUrl) {
+                if (!location.hostname.includes("github.io")) {
                     checkServerConnection();
                 } else {
                     $("a, button").not("#searchConfirm, #searchReset").prop("disabled", true);
@@ -445,6 +445,11 @@
                 let serverConnect = true;
 
                 function checkServerConnection() {
+                    if (location.hostname.includes("github.io")) {
+                        console.log("GitHub Pages 환경 → 서버 체크 생략");
+                        return;
+                    }
+
                     $.ajax({
                         url: baseUrl,
                         type: "POST",
