@@ -1,30 +1,23 @@
 [
-  {
-    "id": "2026-01-24161902",
-    "title": "회원가입 페이지",
-    "url": "signup.html",
-    "body": "(20260124) 회원가입 생성",
-    "status": "true"
-  },
-  {
-    "id": "2026-01-24161923",
-    "title": "로그인",
-    "url": "login.html",
-    "body": "(20260124) 최초 페이지 생성\n(20260124) JS 적용 완료",
-    "status": "true"
-  },
-  {
-    "id": "2026-01-24162014",
-    "title": "메인화면",
-    "url": "main.html",
-    "body": "(20260124) javascript 적용 완료",
-    "status": "true"
-  },
-  {
-    "id": "2026-01-24180607",
-    "title": "사업신청",
-    "url": "business.html",
-    "body": "(20260124) 사업신청",
-    "status": "false"
-  }
+    {
+        "id": "2026-01-24161902",
+        "title": "회원가입 페이지",
+        "url": "signup.html",
+        "body": "(20260124) 회원가입 생성",
+        "status": "true"
+    },
+    {
+        "id": "2026-01-24161923",
+        "title": "로그인",
+        "url": "login.html",
+        "body": "(20260124) 최초 페이지 생성\n(20260124) JS 적용 완료",
+        "status": "true"
+    },
+    {
+        "id": "2026-01-24162014",
+        "title": "메인화면",
+        "url": "main.html",
+        "body": "(20260124) javascript 적용 완료",
+        "status": "true"
+    }
 ]
