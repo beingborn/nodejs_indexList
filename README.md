@@ -95,14 +95,13 @@
 
 ```
 nodejs_test/
+├── index.html                # 메인 대시보드 페이지
 ├── server.js                 # Express 서버 메인 파일
 ├── package.json              # 프로젝트 의존성 및 설정
 ├── pageData.json             # 페이지 데이터 저장 파일 (JSON)
 ├── README.md
-├── pages/
-│   └── index.html            # 메인 대시보드 페이지
-├── resources/
-│   └── style.css             # 전역 스타일시트
+├── pages/                    # 정적 퍼블리싱 페이지
+├── resources/                # 정적 리소스
 ├── assets/                   # 이미지, 아이콘 등 정적 파일
     ├── ico/
     └── logo/
@@ -184,11 +183,10 @@ app.use(
 
 ## 프로젝트 후기✍️
 
-로컬 퍼블리싱 프로젝트의 현황 URL을 정적으로 작업하는 데 리소스를 줄이기 위해 개발했습니다.
-JSON 파일을 활용한 경량 구조로 별도의 데이터베이스 없이도 효율적인 관리가 가능하며,
-Express.js 기반의 간단한 API로 CRUD 작업을 쉽게 구현할 수 있습니다.
+퍼블리싱 작업 완료 후 현황 파일을 하드코딩으로 업데이트하는 프로세스를 효율화하기 위해 제작하였습니다. 
+JSON 파일을 활용한 경량 구조로 별도의 데이터베이스 없이도 효율적인 관리가 가능합니다.
 
-향후 데이터베이스 연동, 사용자 인증, Tailwind Version 생성 등으로 더욱 강화할 계획입니다.
+사용자 인증, Tailwind Version 생성 등으로 더욱 강화할 계획입니다.
 
 <br><br>
 
