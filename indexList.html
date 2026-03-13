@@ -263,7 +263,7 @@
         ></script>
         <script>
             $(function () {
-                const baseUrl = "http://localhost:3000/";
+                const baseUrl = location.hostname === "localhost" ? "http://localhost:3000/" : null;
 
                 function callAjaxPost(data, domain) {
                     $.ajax({
@@ -434,7 +434,12 @@
                 }
 
                 getPagesData();
-                checkServerConnection();
+
+                if (baseUrl) {
+                    checkServerConnection();
+                } else {
+                    $("a, button").not("#searchConfirm").attr("disabled", true);
+                }
 
                 // 서버 상태 확인
                 let serverConnect = true;
