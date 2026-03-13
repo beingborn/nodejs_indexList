@@ -6,7 +6,7 @@
 <br>
 <br>
 원본 코드 : https://github.com/beingborn/nodejs_indexList <br>
-미리보기 : https://beingborn.github.io/nodejs_indexList/pages/index.html
+미리보기 : https://beingborn.github.io/nodejs_indexList/indexList.html
 <br><br>
 
 ## 프로젝트 소개📄
