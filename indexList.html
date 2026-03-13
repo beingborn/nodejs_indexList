@@ -438,7 +438,7 @@
                 if (baseUrl) {
                     checkServerConnection();
                 } else {
-                    $("a, button").not("#searchConfirm").prop("disabled", true);
+                    $("a, button").not("#searchConfirm, #searchReset").prop("disabled", true);
                 }
 
                 // 서버 상태 확인
