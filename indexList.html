@@ -13,7 +13,7 @@
         />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-        <link rel="shortcut icon" href="/assets/favicon.ico" />
+        <link rel="shortcut icon" href="../assets/favicon.ico" />
         <style>
             :root {
                 --bg-header: #303641;
@@ -84,25 +84,25 @@
             button.edit {
                 width: 16px;
                 height: 16px;
-                background: url(/assets/ico/pen-to-square-regular.svg) no-repeat center / cover;
+                background: url(./assets/ico/pen-to-square-regular.svg) no-repeat center / cover;
             }
 
             button.delete {
                 width: 16px;
                 height: 16px;
-                background: url(/assets/ico/trash-can-regular.svg) no-repeat center / cover;
+                background: url(./assets/ico/trash-can-regular.svg) no-repeat center / cover;
             }
 
             button.save {
                 width: 16px;
                 height: 16px;
-                background: url(/assets/ico/floppy-disk-solid.svg) no-repeat center / cover;
+                background: url(./assets/ico/floppy-disk-solid.svg) no-repeat center / cover;
             }
 
             button.cancel {
                 width: 16px;
                 height: 16px;
-                background: url(/assets/ico/x-solid.svg) no-repeat center / cover;
+                background: url(./assets/ico/x-solid.svg) no-repeat center / cover;
             }
 
             html,
@@ -164,7 +164,7 @@
                 <div class="container-lg">
                     <a class="d-flex align-items-center gap-2 navbar-brand" href="#">
                         <img
-                            src="/assets/logo/index_logo.svg"
+                            src="./assets/logo/index_logo.svg"
                             width="170"
                             alt="Logo"
                             class="d-inline-block align-text-top"
@@ -179,7 +179,7 @@
                             aria-label="Search"
                         />
                         <button id="searchConfirm" class="btn btn-primary" type="button">
-                            <img src="/assets/ico/search-line-white.svg" alt="" />
+                            <img src="./assets/ico/search-line-white.svg" alt="" />
                         </button>
                     </div>
                 </div>
@@ -438,7 +438,7 @@
                 if (baseUrl) {
                     checkServerConnection();
                 } else {
-                    $("a, button").not("#searchConfirm").attr("disabled", true);
+                    $("a, button").not("#searchConfirm").prop("disabled", true);
                 }
 
                 // 서버 상태 확인
